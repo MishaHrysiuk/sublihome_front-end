@@ -17,12 +17,30 @@ const App = () => {
                             <Navigate replace to ='/sign_in'/>
                         ) : (<ProfilePage />)}
                     />
-                    <Route path="products" element={<ProductsPage/>} />
-                    <Route path="cart" element={<CartPage />} />
+                    <Route path="products"
+                        element={!authenticationService.currentUserValue ? (
+                            <Navigate replace to ='/sign_in'/>
+                        ) : (<ProductsPage />)}
+                    />
+                    <Route path="cart" element={!authenticationService.currentUserValue ? (
+                            <Navigate replace to ='/sign_in'/>
+                        ) : (<CartPage />)} />
                 </Route>
-                <Route path="sign_in" element={<SignInPage />}/>
-                <Route path="sign_up" element={<SignUpPage />} />
-                <Route path="admin" element={<AdminPage/>} />
+                <Route path="sign_in"
+                    element={authenticationService.currentUserValue ? (
+                        <Navigate replace to ='/'/>
+                    ) : (<SignInPage />)}
+                />
+                <Route path="sign_up"
+                    element={authenticationService.currentUserValue ? (
+                        <Navigate replace to ='/'/>
+                    ) : (<SignUpPage />)}
+                />
+                <Route path="admin"
+                    element={!authenticationService.currentUserIsAdmin ? (
+                        <Navigate replace to ='/'/>
+                    ) : (<AdminPage />)}
+                />
             </Routes>
         </BrowserRouter>
     )

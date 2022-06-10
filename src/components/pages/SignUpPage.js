@@ -8,8 +8,8 @@ const SignUpPage = () => {
     const [lastName, setLastName] = useState('');
     const [city, setCity] = useState('');
     const [street, setStreet] = useState('');
-    const [numberOfHouse, setNumberOfHouse] = useState('');
-    const [numberOfPhone, setNumberOfPhone] = useState('');
+    const [houseNumber, setHouseNumber] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -19,13 +19,13 @@ const SignUpPage = () => {
         if (!!email && !!password &&
             !!firstName && !!lastName &&
             !!city && !!street &&
-            !!numberOfHouse && !!numberOfPhone &&
+            !!houseNumber && !!phoneNumber &&
             (password === passwordConfirm)) {
             console.log({
                 firstName,
                 lastName,
-                adress: `${city}, ${street}, ${numberOfHouse}`,
-                numberOfPhone: `+380${numberOfPhone}`,
+                adress: `${city}, ${street}, ${houseNumber}`,
+                phoneNumber: `+380${phoneNumber}`,
                 email,
                 password
             })
@@ -35,8 +35,8 @@ const SignUpPage = () => {
             setLastName('')
             setCity('')
             setStreet('')
-            setNumberOfHouse('')
-            setNumberOfPhone('')
+            setHouseNumber('')
+            setPhoneNumber('')
             setEmail('')
             setPassword('')
             setPasswordConfirm('')
@@ -105,8 +105,8 @@ const SignUpPage = () => {
                                 <Form.Control
                                     type="number"
                                     placeholder="Введіть №"
-                                    onChange={(e) => { if (e.target.value >= 0) { setNumberOfHouse(e.target.value) } }}
-                                    value={numberOfHouse}/>
+                                    onChange={(e) => { if (e.target.value >= 0) { setHouseNumber(e.target.value) } }}
+                                    value={houseNumber}/>
                             </Form.Group>
                         </Row>
                         <Row className="mb-3">
@@ -118,8 +118,8 @@ const SignUpPage = () => {
                                     type="tel"
                                     placeholder="Введіть номер телефону"
                                     pattern="[0-9]{9}"
-                                    onChange={(e) => { setNumberOfPhone(e.target.value) }}
-                                    value={numberOfPhone} />
+                                    onChange={(e) => { setPhoneNumber(e.target.value) }}
+                                    value={phoneNumber} />
                                 </InputGroup>
                                 </Form.Group>       
                             <Col/>
