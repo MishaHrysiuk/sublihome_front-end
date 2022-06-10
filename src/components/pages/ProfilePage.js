@@ -4,10 +4,15 @@ import DefaultsAxios from "../../helpers/jwt-interceptor";
 import { authenticationService } from "../../services/auth-service"
 import { UserService } from "../../services/sublihome-service";
 import { useEffect, useState } from "react";
+import { errorInterceptor } from "../../helpers/error-interceptor";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
     const userService = new UserService(axios.defaults.baseURL, DefaultsAxios);
     const currentUserId = authenticationService.currentUserId;
+    const isAdmin = authenticationService.currentUserIsAdmin;
+
+    const navigate = useNavigate();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -31,9 +36,7 @@ const ProfilePage = () => {
             .then(onUserLoaded)
             .catch(err => {
                 setLoading(false);
-                if ([401, 403].includes(err.status)) {
-                    authenticationService.logout()
-                }
+                errorInterceptor(err)
             })
     }
 
@@ -50,7 +53,7 @@ const ProfilePage = () => {
 
     function onUpdateUser(e) {
         e.preventDefault()
-        if (!!email && !!firstName && !!lastName && !!city && !!street && !!houseNumber && !!phoneNumber) {
+        if ((!!email && !!firstName && !!lastName && !!city && !!street && !!houseNumber && !!phoneNumber)) {
             userService.updateUser({
                 id: currentUserId,
                 firstName,
@@ -60,14 +63,29 @@ const ProfilePage = () => {
                 email
             }).then(res => {
                 alert('Saved!')
-                window.location.reload()
-            }).catch(err => alert(err.response.message ? err.response.message : err.status))
+            }).catch(errorInterceptor)
         }
-        // else if () {
-            
-        // }
     }
     
+    function onUpdatePassword(e) {
+        e.preventDefault()
+        console.log(e.target.getElementsByTagName('input'))
+        if ((!!oldPassword && !!password && (password === passwordConfirm))) {
+            userService.updateUserPassword({
+                userId: currentUserId,
+                oldPassword,
+                newPassword: password
+            }).then(res => {
+                alert('Password change')
+                e.target.getElementsByTagName('input')[2].style.backgroundColor = '#FFFFFF';
+                e.target.getElementsByTagName('input')[2].style.color = '#000000';  
+                setOldPassword('')
+                setPassword('')
+                setPasswordConfirm('')
+            }).catch(errorInterceptor)
+        }
+    }
+
     function onConfirmPassword(e) {
         setPasswordConfirm(e.target.value);
         if (password === e.target.value) {
@@ -158,7 +176,10 @@ const ProfilePage = () => {
                                 </Form.Group>
                                 <Col/>
                             </Row>
-                            <Card.Title>Зміна паролю</Card.Title>
+                            <Button className="m-2" variant="success" type="submit">Зберегти зміни</Button>
+                    </Form>
+                    <Card.Title>Зміна паролю</Card.Title>
+                    <Form onSubmit={onUpdatePassword}>
                             <Row className="mb-3">
                                 <Form.Group as={Col}>
                                 <Form.Label>Старий пароль</Form.Label>
@@ -184,11 +205,13 @@ const ProfilePage = () => {
                                         onChange={onConfirmPassword}
                                         value={passwordConfirm}/>
                                 </Form.Group>
-                            </Row>
-                            <Button className="m-2" variant="success" type="submit">Зберегти</Button>
-                            <Button className="m-2" variant="warning">Адмін панель</Button>
-                            <Button className="m-2" variant="danger" onClick={authenticationService.logout}>Вийти</Button>
-                        </Form>
+                        </Row>
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <Button style={{justifySelf: 'center'}} className="m-2" variant="success" type="submit">Змінити пароль</Button>
+                            { isAdmin ? <Button onClick={() => navigate('/admin')} className="m-2" variant="warning">Адмін панель</Button> : null}
+                            <Button style={{alignSelf: 'center'}} className="m-2" variant="danger" onClick={authenticationService.logout}>Вийти з профіля</Button>
+                        </div>
+                    </Form>
                         </Card.Body>
                     </Card>
         )

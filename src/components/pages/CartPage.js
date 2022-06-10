@@ -8,6 +8,7 @@ import { Spinner, ListGroup, Card, Button, Pagination, Row, Col } from "react-bo
 
 import Bg from '../../resources/img/cup_1.PNG';
 import { authenticationService } from "../../services/auth-service";
+import { errorInterceptor } from "../../helpers/error-interceptor";
 
 const CartPage = () => {
     const cartService = new CartService(axios.defaults.baseURL, DefaultsAxios);
@@ -34,7 +35,9 @@ const CartPage = () => {
     submitRef.current = submit;
 
     useEffect(() => {
-        onRequest();
+        setTimeout(() => {
+            onRequest();
+        }, 300)
         return (() => {
             if (!submitRef.current) {
                 onSendRequest();
@@ -47,7 +50,7 @@ const CartPage = () => {
     const onRequest = async () => {
         await cartService.getItemsFromCart(currentUserId)
             .then(onCartListLoaded)
-            .catch(err => alert(err.response.message ? err.response.message : err.status))
+            .catch(errorInterceptor)
     }
 
     const onSendRequest = async () => {
@@ -61,7 +64,7 @@ const CartPage = () => {
                 productsCount: countListRef.current
             })
                 .then()
-                .catch(err => alert(err.response.message ? err.response.message : err.status))
+                .catch(errorInterceptor)
         }
     }
 
@@ -158,7 +161,7 @@ const CartPage = () => {
                 navigate('/products');
                 alert('Wait for call')
             })
-            .catch(err => alert(err.response.message ? err.response.message : err.status))
+            .catch(errorInterceptor)
     }
 
     const items = getCards(cartList);

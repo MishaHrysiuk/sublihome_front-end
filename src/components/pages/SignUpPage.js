@@ -1,8 +1,13 @@
+import axios from "axios";
 import { useState } from "react"
 import { Form, Button, Card, Row, Col, InputGroup } from "react-bootstrap"
 import { Link } from "react-router-dom";
+import { UserService } from "../../services/sublihome-service";
+import { authenticationService } from "../../services/auth-service";
+import { errorInterceptor } from "../../helpers/error-interceptor";
 
 const SignUpPage = () => {
+    const userService = new UserService(axios.defaults.baseURL)
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -14,21 +19,18 @@ const SignUpPage = () => {
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
-    function registration(e) {
+    async function registration(e) {
         e.preventDefault()
-        if (!!email && !!password &&
-            !!firstName && !!lastName &&
-            !!city && !!street &&
-            !!houseNumber && !!phoneNumber &&
-            (password === passwordConfirm)) {
-            console.log({
+        if (!!email && !!password && !!firstName && !!lastName && !!city && !!street && !!houseNumber && !!phoneNumber && (password === passwordConfirm)) {
+            await userService.createUser({
                 firstName,
                 lastName,
-                adress: `${city}, ${street}, ${houseNumber}`,
+                address: `${city}, ${street}, ${houseNumber}`,
                 phoneNumber: `+380${phoneNumber}`,
                 email,
                 password
-            })
+            }).then().catch(errorInterceptor)
+            await authenticationService.login(email, password);
             e.target.getElementsByTagName('input')[8].style.backgroundColor = '#FFFFFF';
             e.target.getElementsByTagName('input')[8].style.color = '#000000';  
             setFirstName('')
@@ -57,7 +59,7 @@ const SignUpPage = () => {
 
     return (
         <div className="sign">
-            <h1 className="header__logo" style={{ color: '#FFFFFF', fontSize: '60px' }}>SUBLIhome</h1>
+            <Link to="/" className="header__logo" style={{ color: '#FFFFFF', fontSize: '60px' }}>SUBLIhome</Link>
                 <Card border="info" style={{ width: '55rem' }}>
                     <Card.Header as="h3">Реєстрація</Card.Header>
                     <Card.Body>

@@ -6,6 +6,8 @@ import { useEffect, useState, useRef } from "react";
 import { Card, Spinner, Form, Row, Col, Pagination } from "react-bootstrap";
 import { ProductService, ProductTypeService, CartService } from "../../services/sublihome-service";
 import { authenticationService } from "../../services/auth-service";
+import { useNavigate } from "react-router-dom";
+import { errorInterceptor } from "../../helpers/error-interceptor";
 
 
 const ProductsPage = () => {
@@ -13,6 +15,7 @@ const ProductsPage = () => {
     const productTypeService = new ProductTypeService(axios.defaults.baseURL, DefaultsAxios);
     const cartService = new CartService(axios.defaults.baseURL, DefaultsAxios);
     const currentUserId = authenticationService.currentUserId;
+    const isLoggedIn = authenticationService.isLoggedIn
 
     const [idList, setIdList] = useState([]);
     const [countList, setCountList] = useState([]);
@@ -35,6 +38,8 @@ const ProductsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [countElemOnPage, setCountElemOnPage] = useState(4);
 
+    const navigate = useNavigate();
+
 
 
     useEffect(() => {
@@ -49,17 +54,19 @@ const ProductsPage = () => {
             .then(onProductListLoaded)
             .catch(err => {
                 setLoading(false);
-                alert(err.response.message ? err.response.message : err.status);
+                errorInterceptor(err)
             })
         await productTypeService.getAllProductTypes()
             .then(res => setTypeList(res))
             .catch(err => {
                 setLoading(false);
-                alert(err.status)
+                errorInterceptor(err)
             })
-        await cartService.getItemsFromCart(currentUserId)
-            .then(onCartListLoaded)
-            .catch(err => alert(err.response.message ? err.response.message : err.status))
+        if (isLoggedIn) {
+            await cartService.getItemsFromCart(currentUserId)
+                .then(onCartListLoaded)
+                .catch(errorInterceptor)
+        }
     }
 
     const onSendRequest = async () => {
@@ -73,7 +80,7 @@ const ProductsPage = () => {
                 productsCount: countListRef.current
             })
                 .then(res => console.log('updateCart'))
-                .catch(err => alert(err.response.message ? err.response.message : err.status))
+                .catch(errorInterceptor)
         }
     }
 
@@ -91,6 +98,9 @@ const ProductsPage = () => {
     }
 
     const onAddProductToCart = (id) => {
+        if (!isLoggedIn) {
+            navigate('/sign_in')
+        }
         if (!idList.includes(id)) {
             setIdList(idList => [...idList, id])
             setCountList(countList => [...countList, 1])

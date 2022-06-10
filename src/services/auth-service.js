@@ -9,34 +9,42 @@ const currentUserSubject = new BehaviorSubject(localStorage.getItem('currentUser
 export const authenticationService = {
     login,
     logout,
+    isLoggedIn: isLoggedIn(),
     currentUser: currentUserSubject.asObservable(),
     currentUserId: currentUserSubject.value ? jwtDecode(currentUserSubject.value).UserId : null,
     currentUserIsAdmin: currentUserSubject.value ? jwtDecode(currentUserSubject.value).UserIsAdmin === 'True' : false,
     get currentUserValue () { return currentUserSubject.value }
 };
 
-function login(email, password) {
-    const authClient = new AuthenticationService(axios.defaults.baseURL, DefaultsAxios);
+function isLoggedIn() {
+    try {
+        const obj = jwtDecode(currentUserSubject.value);
+        return Object.keys(obj).every(i => ['UserEmail','UserId','UserIsAdmin', 'iss', 'exp', 'aud'].includes(i))
+    }
+    catch (err) {
+        return false
+    }
 
-    return authClient.login({
+}
+
+async function login(email, password) {
+    const authClient = new AuthenticationService(axios.defaults.baseURL);///DefaultsAxios
+
+    try {
+        const user = await authClient.login({
             email: email,
             password: password
-        })
-        .then(user => {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            alert('Success')
-            localStorage.setItem('currentUser', user);
-            currentUserSubject.next(user);
-            window.location.reload()
-
-            return user;
-        })
-        .catch(err => {
-            localStorage.removeItem('currentUser');
-            currentUserSubject.next(null);
-            window.location.reload()
-            alert(err.response.message)
-        })
+        });
+        localStorage.setItem('currentUser', user);
+        currentUserSubject.next(user);
+        window.location.reload();
+        return user;
+    } catch (err) {
+        localStorage.removeItem('currentUser');
+        currentUserSubject.next(null);
+        window.location.reload();
+        alert(err.response.message);
+    }
 }
 
 function logout() {

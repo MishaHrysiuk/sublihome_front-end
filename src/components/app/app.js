@@ -5,6 +5,8 @@ import './app.scss'
 import { authenticationService } from "../../services/auth-service";
 
 const App = () => {
+    const isLoggedIn = authenticationService.isLoggedIn
+    const isAdmin = authenticationService.currentUserIsAdmin
     return (
         <BrowserRouter>
              <Routes>
@@ -13,31 +15,29 @@ const App = () => {
                     <Route path="about_us" element={<AboutUsPage/>} />
                     <Route
                         path="profile"
-                        element={!authenticationService.currentUserValue ? (
+                        element={!isLoggedIn ? (
                             <Navigate replace to ='/sign_in'/>
                         ) : (<ProfilePage />)}
                     />
                     <Route path="products"
-                        element={!authenticationService.currentUserValue ? (
-                            <Navigate replace to ='/sign_in'/>
-                        ) : (<ProductsPage />)}
+                        element={<ProductsPage />}
                     />
-                    <Route path="cart" element={!authenticationService.currentUserValue ? (
+                    <Route path="cart" element={!isLoggedIn ? (
                             <Navigate replace to ='/sign_in'/>
                         ) : (<CartPage />)} />
                 </Route>
                 <Route path="sign_in"
-                    element={authenticationService.currentUserValue ? (
+                    element={isLoggedIn ? (
                         <Navigate replace to ='/'/>
                     ) : (<SignInPage />)}
                 />
                 <Route path="sign_up"
-                    element={authenticationService.currentUserValue ? (
+                    element={isLoggedIn ? (
                         <Navigate replace to ='/'/>
                     ) : (<SignUpPage />)}
                 />
                 <Route path="admin"
-                    element={!authenticationService.currentUserIsAdmin ? (
+                    element={!isAdmin ? (
                         <Navigate replace to ='/'/>
                     ) : (<AdminPage />)}
                 />
