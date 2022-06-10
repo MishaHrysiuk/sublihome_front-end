@@ -16,7 +16,7 @@ const AppHeader = () => {
                         <Link to="/" className="header__logo">SUBLIhome</Link>
                         <nav>
                             <Stack direction="horizontal" gap={5}>
-                                <NavLink end className = {({isActive}) => doActive(isActive)} to="/about_us">Про нас</NavLink>
+                                <NavLink end className = {({isActive}) => doActive(isActive)} to="/about_us">Про проект</NavLink>
                                 <NavLink end className = {({isActive}) => doActive(isActive)} to="/products">Наші товари</NavLink>
                                 <NavLink end className = {({isActive}) => doActive(isActive)} to="/cart">Корзина</NavLink>
                                 <NavLink end className = {({isActive}) => doActive(isActive)} to="/profile">Профіль</NavLink>
