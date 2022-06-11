@@ -41,7 +41,7 @@ const ProductsPage = () => {
     const navigate = useNavigate();
 
 
-
+    
     useEffect(() => {
         onRequest();
         return (() => {

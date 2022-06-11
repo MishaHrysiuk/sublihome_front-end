@@ -2,11 +2,10 @@ import { authenticationService } from "../services/auth-service";
 
 export const errorInterceptor = (err) => {
     const { response } = err;
-    if ([401, 403].includes(err.status) && authenticationService.currentUserValue()) {
+    if ([401, 403].includes(err.status)) {
         alert('Authentication error');
         authenticationService.logout();
-    }
-    if (!response) {
+    } else if (!response) {
         alert(err);
     } else {
         alert(response.message ? response.message : `Error status ${err.status}`)

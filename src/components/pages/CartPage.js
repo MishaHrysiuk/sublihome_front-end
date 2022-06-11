@@ -37,7 +37,7 @@ const CartPage = () => {
     useEffect(() => {
         setTimeout(() => {
             onRequest();
-        }, 300)
+        }, 500)
         return (() => {
             if (!submitRef.current) {
                 onSendRequest();

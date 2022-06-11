@@ -341,6 +341,62 @@ export class OrderService {
 
     /**
      * @param orderId (optional) 
+     * @return Success
+     */
+    getOrder(orderId: number | undefined , cancelToken?: CancelToken | undefined): Promise<OrdersDto> {
+        let url_ = this.baseUrl + "/api/Order/GetOrder?";
+        if (orderId === null)
+            throw new Error("The parameter 'orderId' cannot be null.");
+        else if (orderId !== undefined)
+            url_ += "orderId=" + encodeURIComponent("" + orderId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processGetOrder(_response);
+        });
+    }
+
+    protected processGetOrder(response: AxiosResponse): Promise<OrdersDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = OrdersDto.fromJS(resultData200);
+            return Promise.resolve<OrdersDto>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<OrdersDto>(null as any);
+    }
+
+    /**
+     * @param orderId (optional) 
      * @param orderStatus (optional) 
      * @return Success
      */
@@ -1893,6 +1949,7 @@ export interface IOrderDto {
 
 export class OrdersDto implements IOrdersDto {
     order?: number;
+    statusId?: number;
     productIds?: number[] | undefined;
     productsCount?: number[] | undefined;
     totalPriceOfOrder?: number;
@@ -1909,6 +1966,7 @@ export class OrdersDto implements IOrdersDto {
     init(_data?: any) {
         if (_data) {
             this.order = _data["order"];
+            this.statusId = _data["statusId"];
             if (Array.isArray(_data["productIds"])) {
                 this.productIds = [] as any;
                 for (let item of _data["productIds"])
@@ -1933,6 +1991,7 @@ export class OrdersDto implements IOrdersDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["order"] = this.order;
+        data["statusId"] = this.statusId;
         if (Array.isArray(this.productIds)) {
             data["productIds"] = [];
             for (let item of this.productIds)
@@ -1950,6 +2009,7 @@ export class OrdersDto implements IOrdersDto {
 
 export interface IOrdersDto {
     order?: number;
+    statusId?: number;
     productIds?: number[] | undefined;
     productsCount?: number[] | undefined;
     totalPriceOfOrder?: number;
