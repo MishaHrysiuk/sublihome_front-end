@@ -28,7 +28,7 @@ function isLoggedIn() {
 }
 
 async function login(email, password) {
-    const authClient = new AuthenticationService(axios.defaults.baseURL);///DefaultsAxios
+    const authClient = new AuthenticationService(axios.defaults.baseURL);
 
     try {
         const user = await authClient.login({
@@ -43,7 +43,7 @@ async function login(email, password) {
         localStorage.removeItem('currentUser');
         currentUserSubject.next(null);
         window.location.reload();
-        alert(err.response.message);
+        alert('Невірний логін або пароль');
     }
 }
 

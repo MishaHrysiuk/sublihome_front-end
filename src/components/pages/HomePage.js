@@ -22,11 +22,11 @@ const HomePage = () => {
                         <img
                         className="carousel__image"
                         src={Car2}
-                        alt="Second slide"
+                        alt="First slide"
                         />
                         <Carousel.Caption>
-                        <h3>Second slide label</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <h3>Sublihome</h3>
+                        <p>Сублімація на чашках, футболках та інших речах</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                     <Carousel.Item>
@@ -36,8 +36,8 @@ const HomePage = () => {
                         alt="Third slide"
                         />
                         <Carousel.Caption>
-                        <h3>Third slide label</h3>
-                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                        <h3>Sublihome</h3>
+                        <p>Товари з власним дизайном</p>
                         </Carousel.Caption>
                     </Carousel.Item>
                 </Carousel>

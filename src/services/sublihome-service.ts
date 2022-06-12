@@ -1951,6 +1951,7 @@ export class OrdersDto implements IOrdersDto {
     order?: number;
     statusId?: number;
     productIds?: number[] | undefined;
+    productsNames?: string[] | undefined;
     productsCount?: number[] | undefined;
     totalPriceOfOrder?: number;
 
@@ -1971,6 +1972,11 @@ export class OrdersDto implements IOrdersDto {
                 this.productIds = [] as any;
                 for (let item of _data["productIds"])
                     this.productIds!.push(item);
+            }
+            if (Array.isArray(_data["productsNames"])) {
+                this.productsNames = [] as any;
+                for (let item of _data["productsNames"])
+                    this.productsNames!.push(item);
             }
             if (Array.isArray(_data["productsCount"])) {
                 this.productsCount = [] as any;
@@ -1997,6 +2003,11 @@ export class OrdersDto implements IOrdersDto {
             for (let item of this.productIds)
                 data["productIds"].push(item);
         }
+        if (Array.isArray(this.productsNames)) {
+            data["productsNames"] = [];
+            for (let item of this.productsNames)
+                data["productsNames"].push(item);
+        }
         if (Array.isArray(this.productsCount)) {
             data["productsCount"] = [];
             for (let item of this.productsCount)
@@ -2011,6 +2022,7 @@ export interface IOrdersDto {
     order?: number;
     statusId?: number;
     productIds?: number[] | undefined;
+    productsNames?: string[] | undefined;
     productsCount?: number[] | undefined;
     totalPriceOfOrder?: number;
 }

@@ -37,7 +37,7 @@ const CartPage = () => {
     useEffect(() => {
         setTimeout(() => {
             onRequest();
-        }, 500)
+        }, 1000)
         return (() => {
             if (!submitRef.current) {
                 onSendRequest();
@@ -159,7 +159,7 @@ const CartPage = () => {
         await orderService.createNewOrder({userId: currentUserId})
             .then(res => {
                 navigate('/products');
-                alert('Wait for call')
+                alert("Ваш заказ створенний. Очікуйте дзвінка для підтвердження")
             })
             .catch(errorInterceptor)
     }

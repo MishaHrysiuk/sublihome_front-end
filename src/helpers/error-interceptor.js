@@ -3,7 +3,6 @@ import { authenticationService } from "../services/auth-service";
 export const errorInterceptor = (err) => {
     const { response } = err;
     if ([401, 403].includes(err.status)) {
-        alert('Authentication error');
         authenticationService.logout();
     } else if (!response) {
         alert(err);

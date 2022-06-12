@@ -1,5 +1,5 @@
 import { Routes, Route, BrowserRouter, Navigate} from "react-router-dom";
-import { MainPage, AboutUsPage, AdminPage, CartPage, ProductsPage, ProfilePage, SignUpPage, SignInPage, HomePage} from "../pages";
+import { MainPage, AboutUsPage, AdminPage, CartPage, ProductsPage, ProfilePage, SignUpPage, SignInPage, HomePage, OrdersPage} from "../pages";
 import React from "react";
 import './app.scss'
 import { authenticationService } from "../../services/auth-service";
@@ -19,12 +19,22 @@ const App = () => {
                             <Navigate replace to ='/sign_in'/>
                         ) : (<ProfilePage />)}
                     />
-                    <Route path="products"
+                    <Route
+                        path="products"
                         element={<ProductsPage />}
                     />
-                    <Route path="cart" element={!isLoggedIn ? (
+                    <Route
+                        path="cart"
+                        element={!isLoggedIn ? (
                             <Navigate replace to ='/sign_in'/>
-                        ) : (<CartPage />)} />
+                            ) : (<CartPage />)}
+                    />
+                    <Route
+                        path="orders"
+                        element={!isLoggedIn ? (
+                            <Navigate replace to ='/sign_in'/>
+                            ) : (<OrdersPage />)}
+                    />
                 </Route>
                 <Route path="sign_in"
                     element={isLoggedIn ? (
