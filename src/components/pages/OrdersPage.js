@@ -50,8 +50,12 @@ const OrdersPage = () => {
                 <Accordion.Item
                     eventKey={item.order}
                     key={item.order}>
-                    <Accordion.Header style={{width: '600px', display: 'flex', justifyContent: 'spa'}}>
-                        {getStatus(item.statusId)} <span style={{fontSize: '20px'}}> - Замовлення №{item.order}</span> 
+                    <Accordion.Header style={{ width: '600px', fontSize: '20px', width: '100%' }}>
+                        <div style={{ display: 'flex', width: '600px' }}>
+                            <div style={{width: '250px' }}>{getStatus(item.statusId)}</div>
+                            <div style={{width: '280px' }}>Замовлення №{item.order}</div>
+                            <div style={{width: '120px' }}>Ціна - {item.totalPriceOfOrder} ₴ </div>
+                        </div>
                     </Accordion.Header>
                     <Accordion.Body>
                         <h3>Замовленні продукти</h3>
